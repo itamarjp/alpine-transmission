@@ -1,10 +1,9 @@
-FROM alpine:latest
+FROM alpine:edge
 
-MAINTAINER Open Source Services [opensourceservices.fr]
 
-RUN apk add --update \
-    transmission-daemon \
-    && rm -rf /var/cache/apk/*
+RUN apk --no-cache --no-progress upgrade && \
+    apk --no-cache --no-progress add --update \
+    transmission-daemon sed tini tzdata bash 
 
 RUN mkdir -p /transmission/downloads \
   && mkdir -p /transmission/incomplete \
@@ -23,3 +22,4 @@ ENV PASSWORD password
 
 RUN chmod +x /start-transmission.sh
 CMD ["/start-transmission.sh"]
+#ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/transmission.sh"]
